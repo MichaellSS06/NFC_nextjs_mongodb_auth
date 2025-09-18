@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true, // genera índice único en la colección
   },
-  name: String,
+  name: { type: String, required: true },
   password: {
     type: String,
     required: true
