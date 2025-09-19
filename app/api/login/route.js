@@ -1,9 +1,12 @@
 import jwt from 'jsonwebtoken'
 import bcryptjs from 'bcryptjs'
 import User from '@/models/User'
+import { connectDB } from "@/lib/mongodb";
 
 export async function POST(req) {
-  const { body } = req
+  await connectDB();
+  const body = await req.json()
+  console.log(body)
   const { username, password } = body
 
   const user = await User.findOne({ username })
@@ -13,7 +16,7 @@ export async function POST(req) {
     : await bcryptjs.compare(password, user.password)
 
   if (!(user && passwordCorrect)) {
-    response.status(401).json({
+    Response.status(401).json({
       error: 'invalid user or password'
     })
   }
@@ -31,7 +34,7 @@ export async function POST(req) {
     }
   )
 
-  return Response.send({
+  return Response.json({
     name: user.name,
     username: user.username,
     token

@@ -1,8 +1,10 @@
 import { Registro } from "@/models/Registro"
-import userExtractor from "../../../middleware/userExtractor"
+import userExtractor from "@/middleware/userExtractor"
 import User from "@/models/User";
+import { connectDB } from "@/lib/mongodb";
 
 export async function GET() {
+    await connectDB();
     const registros = await Registro.find({}).populate('user', {
     username: 1,
     name: 1
@@ -11,57 +13,43 @@ export async function GET() {
 }
 
 export async function POST(req, res) {
+  await connectDB();
+  const body = await req.json()
   const {
     subestacion,
     materiales
-  } = req.body
+  } = body
 
-  const {userId} = userExtractor(req, res)
+  try{
+    const userId = await userExtractor(req, res)
+    const user = await User.findById(userId)
+    console.log(user)
 
-  const user = await User.findById(userId)
+    if (!subestacion) {
+      return Response.json({
+        error: 'required "subestacion" field is missing'
+      }, {status: 400})
+    }
 
-  if (!subestacion) {
-    return response.status(400).json({
-      error: 'required "subestacion" field is missing'
+    const newRegistro = new Registro({
+      subestacion,
+      date: new Date(),
+      materiales,
+      user: user._id
     })
-  }
 
-  const newRegistro = new Registro({
-    subestacion,
-    date: new Date(),
-    materiales,
-    user: user._id
-  })
+    try {
+      const savedRegistro = await newRegistro.save()
 
-  try {
-    const savedRegistro = await newRegistro.save()
+      user.registros = user.registros.concat(savedRegistro._id)
+      await user.save()
 
-    user.registros = user.registros.concat(savedRegistro._id)
-    await user.save()
-
-    Response.json(savedRegistro)
+      return Response.json(savedRegistro)
+    } catch (error) {
+      return Response.send("Error guardando registro", error)
+    }
   } catch (error) {
-    Response.send("Error guardando registro", error)
+    return Response.json({ error: error.message }, { status: 401 });
   }
-}
-
-export async function PUT(req, res) {
-  const { id } = req.params
-  const { subestacion, materiales } = req.body
-
-  const newRegistroInfo = {
-    subestacion,
-    materiales
-  }
-
-  console.log(id, newRegistroInfo)
-
-  Registro.findByIdAndUpdate(id, newRegistroInfo, { new: true })
-    .then(result => {
-      console.log(result)
-      Response.json(result)
-    })
-    .catch(error => {
-    Response.send("Error actualizando registro", error)
-  })
+  
 }

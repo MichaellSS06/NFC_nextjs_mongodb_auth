@@ -6,7 +6,8 @@ import bcryptjs from "bcryptjs"
 export async function GET() {
   await connectDB();
   const users = await User.find({}).populate('registros', {
-    content: 1,
+    subestacion: 1,
+    materiales:1,
     date: 1
   });
   return Response.json(users);
@@ -19,8 +20,13 @@ export async function POST(req) {
   const saltRounds = 10
 
   const passwordHash = await bcryptjs.hash(password, saltRounds)
-
-  const newUser = await User.create({username, name, password: passwordHash});
-
-  return Response.json(newUser);
+  try {
+    const newUser = await User.create({username, name, password: passwordHash});
+    return Response.json(newUser);
+  } catch(error) {
+    if (error.message.includes("Username ya registrado")) {
+      return Response.json({ error: error.message }, { status: 409 });
+    }
+    return Response.json({ error: "Error interno" }, { status: 500 });
+  }  
 }

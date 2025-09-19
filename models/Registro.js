@@ -9,7 +9,7 @@ const registroSchema = new mongoose.Schema({
     _id: false
   }],
   user: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }
 })
@@ -22,4 +22,4 @@ registroSchema.set('toJSON', {
   }
 })
 
-export const Registro = mongoose.model('Registro', registroSchema)
+export const Registro = mongoose.models.Registro || mongoose.model('Registro', registroSchema)

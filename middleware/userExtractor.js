@@ -1,20 +1,26 @@
 import jwt from 'jsonwebtoken'
 
-export default function userExtractor(request, response) {
-  const authorization = request.get('authorization')
+export default async function userExtractor(request) {
+  const authorization = request.headers.get('Authorization')
   let token = ''
 
   if (authorization && authorization.toLowerCase().startsWith('bearer')) {
     token = authorization.substring(7)
   }
-
-  const decodedToken = jwt.verify(token, process.env.SECRET)
-
-  if (!token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+  
+  if (!token) {
+    throw new Error("token missing or invalid");
   }
 
-  const { id: userId } = decodedToken
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if (!token || !decodedToken.id) {
+      return Response.json({ error: 'token missing or invalid' }, {status:401})
+    }
+    const { id: userId } = decodedToken
+    return userId
 
-  return request.userId = userId
+  } catch (err) {//eslint-disable-line
+    throw new Error("token missing or invalid");
+  }
 }

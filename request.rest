@@ -1,0 +1,62 @@
+### GET USERS
+GET http://localhost:3000/api/users
+
+### GET registros
+GET http://localhost:3000/api/registros
+
+### POST USERS
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+    "username":"test",
+    "name":"Test",
+    "password":"1234"
+}
+
+### POST LOGIN USER
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+    "username":"test",
+    "password":"1234"
+}
+
+### POST registro
+POST http://localhost:3000/api/registros
+Content-Type: application/json
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q1YzFlNWExYzZmMmQwZTk5NGY3MiIsInVzZXJuYW1lIjoibWFpYyIsImlhdCI6MTc1ODI5OTk2MiwiZXhwIjoxNzU4OTA0NzYyfQ.FvNxnQj4jHF3fdQcjuDMDsC1KRjLXen3RCcyBC-1JD0
+
+{
+    "subestacion": "SE Zorritos",
+    "materiales": [
+        {
+            "nombre": "CPC100",
+            "cantidad": 2
+        },
+        {
+            "nombre": "TDR9000",
+            "cantidad": 2
+        }
+    ]
+}
+
+### PUT registro
+PUT http://localhost:3000/api/registros/68cd727a99371c0f249ad604
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q4YjQxMWMyYzYyMjcyYmFjYWU1NiIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc1ODMwMTA5OCwiZXhwIjoxNzU4OTA1ODk4fQ.s62fvV0ywm6wwHGZIMOnHlOfiN0tB0gwKsvlGjurNUY
+
+{
+    "subestacion": "SE Zorritos",
+    "materiales": [
+        {
+            "nombre": "LCM500",
+            "cantidad": 4
+        },
+        {
+            "nombre": "DILO",
+            "cantidad": 4
+        }
+    ]
+}
