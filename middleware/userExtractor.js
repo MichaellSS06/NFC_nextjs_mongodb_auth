@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-export default function userExtractor(request, response, next) {
+export default function userExtractor(request, response) {
   const authorization = request.get('authorization')
   let token = ''
 
@@ -16,7 +16,5 @@ export default function userExtractor(request, response, next) {
 
   const { id: userId } = decodedToken
 
-  request.userId = userId
-
-  next()
+  return request.userId = userId
 }
