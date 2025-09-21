@@ -1,0 +1,42 @@
+[
+  {
+    "subestacion": "SE Zorritos",
+    "date": "2025-09-19T15:10:50.577Z",
+    "materiales": [
+      {
+        "nombre": "LCM500",
+        "cantidad": 4
+      },
+      {
+        "nombre": "DILO",
+        "cantidad": 3
+      }
+    ],
+    "user": {
+      "username": "maic",
+      "name": "Michaell",
+      "id": "68cd5c1e5a1c6f2d0e994f72"
+    },
+    "id": "68cd727a99371c0f249ad604"
+  },
+  {
+    "subestacion": "SE Zorritos",
+    "date": "2025-09-19T15:15:07.716Z",
+    "materiales": [
+      {
+        "nombre": "CPC100",
+        "cantidad": 1
+      },
+      {
+        "nombre": "TDR9000",
+        "cantidad": 2
+      }
+    ],
+    "user": {
+      "username": "maic",
+      "name": "Michaell",
+      "id": "68cd5c1e5a1c6f2d0e994f72"
+    },
+    "id": "68cd737b99371c0f249ad608"
+  }
+]
