@@ -66,11 +66,16 @@ export default function NavBar() {
             >
                 <Link onClick={(event) => handleClick("/registros", event)} href="/registros" className="hover:text-blue-400 transition">Registros</Link>
                 <Link onClick={(event) => handleClick("/crear_registro", event)} href="/crear_registro" className="hover:text-blue-400 transition">Crear Registro</Link>
-                {user ? <Link onClick={logout} href="/" className="hover:text-blue-400 transition">Log Out</Link>:
-                <>
-                <Link href="/signup" className="hover:text-blue-400 transition">Sign Up</Link>
-                <Link href="/login" className="hover:text-blue-400 transition">Log In</Link>
-                </>
+                {user ? 
+                    <>
+                    <p>Hola {user.name}</p>
+                    <Link onClick={logout} href="/" className="hover:text-blue-400 transition">Log Out</Link>
+                    </>
+                    :
+                    <>
+                    <Link href="/signup" className="hover:text-blue-400 transition">Sign Up</Link>
+                    <Link href="/login" className="hover:text-blue-400 transition">Log In</Link>
+                    </>
                 }
             </motion.div>
         )}

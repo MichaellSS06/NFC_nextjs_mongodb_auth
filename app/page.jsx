@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
 import Image from "next/image";
 
 export default function Home() {
@@ -21,6 +19,7 @@ export default function Home() {
             backgroundImage: "url('https://picsum.photos/1920/1080?blur')",
           }}
         > */}
+        
         <div className="absolute inset-0 -z-10">
             <Image
             src="/banner_isa.webp" // 👈 ruta desde /public
