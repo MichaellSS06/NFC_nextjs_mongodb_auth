@@ -3,9 +3,55 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
+import loginService from "@/services/login"
+import registroService from "@/services/registros"
+import { useAuth } from "@/context/authContext";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordLogin, setShowPasswordLogin] = useState(false);
+  const [usernameLogin, setUsernameLogin] = useState('');
+  const [passwordLogin, setPasswordLogin] = useState('');
+  const { redirectTo, setRedirectTo, setUser } = useAuth();
+  const [errorMessage, setErrorMessage] = useState('')
+  const router = useRouter();
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+
+    try {
+      const userfromApi = await loginService.login({
+        username: usernameLogin,
+        password: passwordLogin
+      })
+      console.log(userfromApi)
+
+      window.localStorage.setItem(
+        'loggedUser', JSON.stringify(userfromApi)
+      )
+
+      setUser(userfromApi)
+
+      registroService.setToken(userfromApi.token)
+      setUsernameLogin('')
+      setPasswordLogin('')
+      setErrorMessage('')
+
+      // si había una ruta pendiente, redirige allí
+      if (redirectTo) {
+        router.push(redirectTo);
+        setRedirectTo(null);
+      } else {
+        router.push("/"); // fallback
+      }
+
+    } catch (e) { // eslint-disable-line
+      setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
 
   return (
     <section className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4">
@@ -19,12 +65,12 @@ export default function LoginPage() {
           Inicia Sesión
         </h1>
 
-        <form className="space-y-5" onSubmit={(e) => {e.preventDefault(); // 👈 detiene el refresh
-              console.log("Formulario enviado");
-            }}>
+        <form className="space-y-5" onSubmit={handleLogin}>
           <div>
             <label className="block mb-1 text-sm font-medium">Usuario</label>
             <input
+              value={usernameLogin}
+              onChange={({target})=>setUsernameLogin(target.value)}
               type="text"
               placeholder="Tu usuario"
               className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
@@ -35,16 +81,18 @@ export default function LoginPage() {
             <label className="block mb-1 text-sm font-medium">Contraseña</label>
             <div className="relative">
               <input
-                type={showPassword ? "text" : "password"}
+                value={passwordLogin}
+                onChange={({target})=>setPasswordLogin(target.value)}
+                type={showPasswordLogin ? "text" : "password"}
                 placeholder="********"
                 className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none pr-10"
               />
               <button
                 type="button"
                 className="absolute right-3 top-3 text-gray-400 hover:text-white"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPasswordLogin(!showPasswordLogin)}
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPasswordLogin ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </div>
@@ -57,6 +105,10 @@ export default function LoginPage() {
             Entrar
           </motion.button>
         </form>
+        
+        {errorMessage && <p className="mt-6 text-center text-sm text-red-600">
+          {errorMessage}
+        </p>}
 
         <p className="mt-6 text-center text-sm text-gray-400">
           ¿No tienes cuenta?{" "}

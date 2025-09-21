@@ -3,9 +3,49 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
+import usersService from "@/services/users"
+import loginService from "@/services/login";
+import registroService from "@/services/registros";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordSignup, setShowPasswordSignup] = useState(false);
+  const [usernameSignup, setUsernameSignup] = useState('');
+  const [passwordSignup, setPasswordSignup] = useState('');
+  const [name, setName] = useState('');
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState(null)
+
+
+  const handleSignUp = async (event) =>{
+    event.preventDefault()
+    try {
+      const newUser = await usersService.signup({
+        username: usernameSignup,
+        name: name,
+        password: passwordSignup
+      })
+
+      const userfromApi = await loginService.login({
+        username: usernameSignup,
+        password: passwordSignup
+      })
+
+      window.localStorage.setItem(
+        'loggedUser', JSON.stringify(userfromApi)
+      )
+
+      registroService.setToken(userfromApi.token)
+
+      router.push("/");
+      
+    } catch (e) { // eslint-disable-line
+      setErrorMessage('Failed sign up')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  };
 
   return (
     <section className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4">
@@ -19,14 +59,14 @@ export default function SignupPage() {
           Crear Cuenta
         </h1>
 
-        <form className="space-y-5" onSubmit={(e) => {e.preventDefault(); // 👈 detiene el refresh
-              console.log("Formulario enviado");
-            }}>
+        <form className="space-y-5" onSubmit={handleSignUp}>
           <div>
             <label className="block mb-1 text-sm font-medium">Nombre</label>
             <input
+              value={name}
+              onChange={({target})=>setName(target.value)}
               type="text"
-              placeholder="Tu nombre completo"
+              placeholder="Tu name completo"
               className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
@@ -34,6 +74,8 @@ export default function SignupPage() {
           <div>
             <label className="block mb-1 text-sm font-medium">Usuario</label>
             <input
+              value={usernameSignup}
+              onChange={({target})=>setUsernameSignup(target.value)}
               type="text"
               placeholder="Nombre de usuario"
               className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
@@ -44,16 +86,18 @@ export default function SignupPage() {
             <label className="block mb-1 text-sm font-medium">Contraseña</label>
             <div className="relative">
               <input
-                type={showPassword ? "text" : "password"}
+                value={passwordSignup}
+                onChange={({target})=>setPasswordSignup(target.value)}
+                type={showPasswordSignup ? "text" : "password"}
                 placeholder="********"
                 className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none pr-10"
               />
               <button
                 type="button"
                 className="absolute right-3 top-3 text-gray-400 hover:text-white"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPasswordSignup(!showPasswordSignup)}
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPasswordSignup ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </div>
@@ -66,6 +110,10 @@ export default function SignupPage() {
             Registrarme
           </motion.button>
         </form>
+
+        {errorMessage && <p className="mt-6 text-center text-sm text-red-600">
+          {errorMessage}
+        </p>}
 
         <p className="mt-6 text-center text-sm text-gray-400">
           ¿Ya tienes cuenta?{" "}

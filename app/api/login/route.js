@@ -16,9 +16,9 @@ export async function POST(req) {
     : await bcryptjs.compare(password, user.password)
 
   if (!(user && passwordCorrect)) {
-    Response.status(401).json({
+    return Response.json({
       error: 'invalid user or password'
-    })
+    },{status:401})
   }
   //sesion de usuario
   const userForToken = {

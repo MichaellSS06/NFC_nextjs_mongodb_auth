@@ -17,6 +17,7 @@ export async function POST(req) {
   await connectDB();
   const body = await req.json();
   const { username, name, password } = body
+  console.log(body)
   const saltRounds = 10
 
   const passwordHash = await bcryptjs.hash(password, saltRounds)

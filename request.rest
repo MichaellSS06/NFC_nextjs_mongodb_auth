@@ -26,7 +26,7 @@ Content-Type: application/json
 ### POST registro
 POST http://localhost:3000/api/registros
 Content-Type: application/json
-#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q1YzFlNWExYzZmMmQwZTk5NGY3MiIsInVzZXJuYW1lIjoibWFpYyIsImlhdCI6MTc1ODI5OTk2MiwiZXhwIjoxNzU4OTA0NzYyfQ.FvNxnQj4jHF3fdQcjuDMDsC1KRjLXen3RCcyBC-1JD0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q1YzFlNWExYzZmMmQwZTk5NGY3MiIsInVzZXJuYW1lIjoibWFpYyIsImlhdCI6MTc1ODI5OTk2MiwiZXhwIjoxNzU4OTA0NzYyfQ.FvNxnQj4jHF3fdQcjuDMDsC1KRjLXen3RCcyBC-1JD0
 
 {
     "subestacion": "SE Zorritos",
@@ -42,7 +42,7 @@ Content-Type: application/json
     ]
 }
 
-### PUT registro
+### PUT registro (falta)
 PUT http://localhost:3000/api/registros/68cd727a99371c0f249ad604
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q4YjQxMWMyYzYyMjcyYmFjYWU1NiIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc1ODMwMTA5OCwiZXhwIjoxNzU4OTA1ODk4fQ.s62fvV0ywm6wwHGZIMOnHlOfiN0tB0gwKsvlGjurNUY
@@ -56,7 +56,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q4YjQxM
         },
         {
             "nombre": "DILO",
-            "cantidad": 4
+            "cantidad": 5
         }
     ]
 }
