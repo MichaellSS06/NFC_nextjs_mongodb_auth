@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/context/authContext";
 import { sub } from "framer-motion/client";
 import registroService from "@/services/registros";
+import { useRouter } from "next/navigation";
 
 export default function EditarRegistroPage() {
   const { registro } = useParams(); // captura el id dinámico
@@ -13,14 +14,15 @@ export default function EditarRegistroPage() {
   const [materiales, setMateriales] = useState([]);
   const [mensaje, setMensaje] = useState("");
   const { registroActual } = useAuth();
+  const router = useRouter();
   console.log(registro)
 
   useEffect(() => {
   if (registroActual) {
     setSubestacion(registroActual.subestacion || "");
     setMateriales(registroActual.materiales || []);
-  }
-}, [registroActual]);
+    }
+  }, [registroActual]);
 
   const handleDeleteMaterial = (nombre) => {
     setMateriales((prev) => prev.filter((m) => m.nombre !== nombre));
@@ -41,7 +43,11 @@ export default function EditarRegistroPage() {
           subestacion: subestacion,
           materiales: materiales,
         })    
-      setMensaje("✅ Cambios guardados con éxito");  
+      setMensaje("✅ Cambios guardados con éxito");
+      setTimeout(() => {
+        router.push("/registros")
+      }, 1000)
+        
     } catch (error) {
       setMensaje("❌ Registro no corresponde a usuario");
       console.log(error.message)

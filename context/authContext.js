@@ -16,6 +16,11 @@ export function AuthProvider({ children }) {
     if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
 
+  const login = (userData) => {
+    window.localStorage.setItem("loggedUser", JSON.stringify(userData));
+    setUser(userData);
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem("loggedUser");
@@ -36,7 +41,7 @@ export function AuthProvider({ children }) {
   }, [registroActual]);
 
   return (
-    <AuthContext.Provider value={{ user, setRedirectTo, redirectTo, logout, setUser, registroActual, setRegistroActual }}>
+    <AuthContext.Provider value={{ user, setRedirectTo, redirectTo, logout, setUser, login, registroActual, setRegistroActual }}>
       {children}
     </AuthContext.Provider>
   );

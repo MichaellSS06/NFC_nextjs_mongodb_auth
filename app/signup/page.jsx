@@ -7,6 +7,7 @@ import usersService from "@/services/users"
 import loginService from "@/services/login";
 import registroService from "@/services/registros";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
 
 export default function SignupPage() {
   const [showPasswordSignup, setShowPasswordSignup] = useState(false);
@@ -15,6 +16,7 @@ export default function SignupPage() {
   const [name, setName] = useState('');
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState(null)
+  const { login } = useAuth();
 
 
   const handleSignUp = async (event) =>{
@@ -31,11 +33,9 @@ export default function SignupPage() {
         password: passwordSignup
       })
 
-      window.localStorage.setItem(
-        'loggedUser', JSON.stringify(userfromApi)
-      )
+      login(userfromApi)
 
-      registroService.setToken(userfromApi.token)
+      //registroService.setToken(userfromApi.token)
 
       router.push("/");
       

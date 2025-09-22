@@ -1,63 +1,101 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
+import registroService from "@/services/registros";
+import { useRouter } from "next/navigation";
 
 export default function CrearRegistroPage() {
   const [subestacion, setSubestacion] = useState("");
   const [materiales, setMateriales] = useState([]);
+  const [nuevoMaterial, setNuevoMaterial] = useState("");
+  const scanningRef = useRef(false);
   const [loading, setLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
+  const router = useRouter();
 
   // Simulación de NFC scan: agrega un material "random"
-  const handleScanNFC = () => {
-    const mockMateriales = [
-      { nombre: "CPC100", cantidad: 1 },
-      { nombre: "TDR9000", cantidad: 1 },
-      { nombre: "DILO", cantidad: 1 },
-      { nombre: "LCM500", cantidad: 1 },
-    ];
-    const random = mockMateriales[Math.floor(Math.random() * mockMateriales.length)];
-    setMateriales((prev) => {
-      const existing = prev.find((m) => m.nombre === random.nombre);
-      if (existing) {
-        return prev.map((m) =>
-          m.nombre === random.nombre ? { ...m, cantidad: m.cantidad + 1 } : m
-        );
+  const handleScanNFC = async () => {
+    if ("NDEFReader" in window) {
+      // 📡 Escaneo real NFC (solo Chrome/Android)
+      try {
+        if (scanningRef.current) {
+          console.log("Ya hay un escaneo en curso 🚫");
+          return;
+        }
+        const ndef = new NDEFReader();
+        await ndef.scan();
+        console.log("📡 Escaneando NFC...");
+        scanningRef.current = true;
+
+        ndef.onreading = (event) => {
+          const decoder = new TextDecoder();
+          for (const record of event.message.records) {
+            if (record.recordType === "text") {
+              const nombre = decoder.decode(record.data);
+              console.log("✅ Tag leído:", nombre);
+
+              setMateriales((prev) => {
+                const existing = prev.find((m) => m.nombre === nombre);
+                if (existing) {
+                  return prev.map((m) =>
+                    m.nombre === nombre ? { ...m, cantidad: m.cantidad + 1 } : m
+                  );
+                }
+                return [...prev, { nombre, cantidad: 1 }];
+              });
+            }
+          }
+        };
+      } catch (err) {
+        console.error("❌ Error al leer NFC:", err);
       }
-      return [...prev, random];
-    });
+    } else {
+      // 🖥 Mock en PC (para pruebas sin NFC)
+      const mockMateriales = [
+        { nombre: "CPC100", cantidad: 1 },
+        { nombre: "TDR9000", cantidad: 1 },
+        { nombre: "DILO", cantidad: 1 },
+        { nombre: "LCM500", cantidad: 1 },
+      ];
+      const random = mockMateriales[Math.floor(Math.random() * mockMateriales.length)];
+      console.log("💻 Mock NFC leído:", random.nombre);
+
+      setMateriales((prev) => {
+        const existing = prev.find((m) => m.nombre === random.nombre);
+        if (existing) {
+          return prev.map((m) =>
+            m.nombre === random.nombre ? { ...m, cantidad: m.cantidad + 1 } : m
+          );
+        }
+        return [...prev, random];
+      });
+    }
   };
 
+
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // setLoading(true);
-    // setMensaje("");
+    e.preventDefault();
+    setLoading(true);
+    setMensaje("⏳ Creando registro...");
 
-    // try {
-    //   const res = await fetch("http://localhost:3000/api/registros", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization:
-    //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q1YzFlNWExYzZmMmQwZTk5NGY3MiIsInVzZXJuYW1lIjoibWFpYyIsImlhdCI6MTc1ODI5OTk2MiwiZXhwIjoxNzU4OTA0NzYyfQ.FvNxnQj4jHF3fdQcjuDMDsC1KRjLXen3RCcyBC-1JD0",
-    //     },
-    //     body: JSON.stringify({
-    //       subestacion,
-    //       materiales,
-    //     }),
-    //   });
-
-    //   if (!res.ok) throw new Error("Error al crear registro");
-
-    //   setMensaje("✅ Registro creado con éxito");
-    //   setSubestacion("");
-    //   setMateriales([]);
-    // } catch (error) {
-    //   setMensaje("❌ " + error.message);
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      await registroService.create({
+        subestacion: subestacion,
+        materiales: materiales
+      })
+      setMensaje("✅ Registro creado con éxito");
+      setSubestacion("");
+      setMateriales([]);
+      setTimeout(() => {
+        router.push("/registros")
+      }, 1000)
+      
+    } catch (error) {
+      setMensaje("❌ " + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -96,7 +134,7 @@ export default function CrearRegistroPage() {
               type="button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              // onClick={handleScanNFC}
+              onClick={handleScanNFC}
               className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow hover:opacity-90 transition"
             >
               📡 Escanear NFC
@@ -112,17 +150,122 @@ export default function CrearRegistroPage() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: idx * 0.2 }}
-                  className="p-4 border-2 border-indigo-400 rounded-xl bg-indigo-50 flex justify-between items-center"
+                  className="p-4 border-2 border-indigo-400 rounded-xl bg-indigo-50 flex justify-between items-center space-x-3"
                 >
-                  <span className="font-medium">{mat.nombre}</span>
-                  <span className="px-3 py-1 bg-indigo-200 rounded-lg font-semibold">
-                    {mat.cantidad}
-                  </span>
+                  <span className="font-medium flex-1 truncate">{mat.nombre}</span>
+                  
+                      {/* Cantidad con botones */}
+                  <div className="flex items-center space-x-2">
+                    {/* Botón + */}
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() =>
+                        setMateriales((prev) =>
+                          prev.map((m) =>
+                            m.nombre === mat.nombre
+                              ? { ...m, cantidad: m.cantidad + 1 }
+                              : m
+                          )
+                        )
+                      }
+                      className="px-2 py-1 bg-green-500 text-white rounded-lg shadow hover:bg-green-600"
+                    >
+                      +
+                    </motion.button>
+
+                    {/* Cantidad */}
+                    <span className="px-3 py-1 bg-indigo-200 rounded-lg font-semibold min-w-[40px] text-center">
+                      {mat.cantidad}
+                    </span>
+
+                    {/* Botón - */}
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() =>
+                        setMateriales((prev) =>
+                          prev
+                            .map((m) =>
+                              m.nombre === mat.nombre
+                                ? { ...m, cantidad: m.cantidad - 1 }
+                                : m
+                            )
+                            .filter((m) => m.cantidad > 0) // elimina si llega a 0
+                        )
+                      }
+                      className="px-2 py-1 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600"
+                    >
+                      –
+                    </motion.button>
+
+                    {/* Botón eliminar */}
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() =>
+                        setMateriales((prev) =>
+                          prev.filter((m) => m.nombre !== mat.nombre)
+                        )
+                      }
+                      className="px-2 py-1 bg-red-500 text-white rounded-lg shadow hover:bg-red-600"
+                    >
+                      ✕
+                    </motion.button>
+                  </div>
+
                 </motion.div>
               ))}
             </div>
           )}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="p-4 border-2 border-dashed border-gray-400 rounded-xl bg-white flex flex-col space-y-3"
+        >
+          <span className="font-medium text-gray-600">Agregar material manual</span>
+
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-2 sm:space-y-0">
+            {/* Campo nombre */}
+            <input
+              type="text"
+              placeholder="Nombre del material"
+              value={nuevoMaterial}
+              onChange={(e) => setNuevoMaterial(e.target.value)}
+              className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
+
+            {/* Botón agregar */}
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                if (!nuevoMaterial.trim()) return;
+                setMateriales((prev) => {
+                  const existing = prev.find((m) => m.nombre === nuevoMaterial.trim());
+                  if (existing) {
+                    return prev.map((m) =>
+                      m.nombre === nuevoMaterial.trim()
+                        ? { ...m, cantidad: m.cantidad + 1 }
+                        : m
+                    );
+                  }
+                  return [...prev, { nombre: nuevoMaterial.trim(), cantidad: 1 }];
+                });
+                setNuevoMaterial(""); // limpiar input
+              }}
+              className="px-4 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600"
+            >
+              Agregar
+            </motion.button>
+          </div>
+        </motion.div>
 
         {/* Botón enviar */}
         <motion.button

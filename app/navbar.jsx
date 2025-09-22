@@ -64,17 +64,17 @@ export default function NavBar() {
             animate={{ y: 0, opacity: 1 }}
             className="md:hidden bg-black/90 px-6 py-4 flex flex-col gap-4"
             >
-                <Link onClick={(event) => handleClick("/registros", event)} href="/registros" className="hover:text-blue-400 transition">Registros</Link>
-                <Link onClick={(event) => handleClick("/crear_registro", event)} href="/crear_registro" className="hover:text-blue-400 transition">Crear Registro</Link>
+                <Link onClick={(event) => {handleClick("/registros", event); setOpen(!open)}} href="/registros" className="hover:text-blue-400 transition">Registros</Link>
+                <Link onClick={(event) => {handleClick("/crear_registro", event); setOpen(!open)}} href="/crear_registro" className="hover:text-blue-400 transition">Crear Registro</Link>
                 {user ? 
                     <>
                     <p>Hola {user.name}</p>
-                    <Link onClick={logout} href="/" className="hover:text-blue-400 transition">Log Out</Link>
+                    <Link onClick={()=>{logout; setOpen(!open)}} href="/" className="hover:text-blue-400 transition">Log Out</Link>
                     </>
                     :
                     <>
-                    <Link href="/signup" className="hover:text-blue-400 transition">Sign Up</Link>
-                    <Link href="/login" className="hover:text-blue-400 transition">Log In</Link>
+                    <Link onClick={()=>setOpen(!open)}href="/signup" className="hover:text-blue-400 transition">Sign Up</Link>
+                    <Link onClick={()=>setOpen(!open)}href="/login" className="hover:text-blue-400 transition">Log In</Link>
                     </>
                 }
             </motion.div>

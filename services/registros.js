@@ -1,12 +1,19 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3000/api/registros'
+const baseUrl = 'https://nonethically-agrobiological-nerissa.ngrok-free.dev/api/registros'
 
-let token = null
+// let token = null
 
-const setToken = newToken => {
-  token = `Bearer ${newToken}`
-}
+export const getToken = () => {
+  const loggedUserJSON = window.localStorage.getItem("loggedUser");
+  if (!loggedUserJSON) return null;
+  const user = JSON.parse(loggedUserJSON);
+  return `Bearer ${user.token}`;
+};
+
+// const setToken = newToken => {
+//   token = `Bearer ${newToken}`
+// }
 
 const getAll = async () => {
   const request = await axios.get(baseUrl)
@@ -16,7 +23,7 @@ const getAll = async () => {
 const create = async (newObject) => {
   const config = {
     headers: {
-      Authorization: token
+      Authorization: getToken()
     }
   }
 
@@ -33,7 +40,7 @@ const create = async (newObject) => {
 const update = async (id, newObject) => {
   const config = {
     headers: {
-      Authorization: token
+      Authorization: getToken()
     }
   }
   console.log(id)
@@ -47,4 +54,4 @@ const update = async (id, newObject) => {
   return request.data
 }
 
-export default { getAll, create, update, setToken }
+export default { getAll, create, update }

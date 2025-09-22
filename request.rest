@@ -1,5 +1,5 @@
 ### GET USERS
-GET http://localhost:3000/api/users
+GET https://nonethically-agrobiological-nerissa.ngrok-free.dev/api/users
 
 ### GET registros
 GET http://localhost:3000/api/registros

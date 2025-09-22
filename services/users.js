@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3000/api/users'
+const baseUrl = 'https://nonethically-agrobiological-nerissa.ngrok-free.dev/api/users'
 
 const signup = async credentials => {
   const res = await axios.post(baseUrl, credentials)

@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [showPasswordLogin, setShowPasswordLogin] = useState(false);
   const [usernameLogin, setUsernameLogin] = useState('');
   const [passwordLogin, setPasswordLogin] = useState('');
-  const { redirectTo, setRedirectTo, setUser } = useAuth();
+  const { redirectTo, setRedirectTo, login } = useAuth();
   const [errorMessage, setErrorMessage] = useState('')
   const router = useRouter();
 
@@ -26,13 +26,9 @@ export default function LoginPage() {
       })
       console.log(userfromApi)
 
-      window.localStorage.setItem(
-        'loggedUser', JSON.stringify(userfromApi)
-      )
+      login(userfromApi)
 
-      setUser(userfromApi)
-
-      registroService.setToken(userfromApi.token)
+      //registroService.setToken(userfromApi.token)
       setUsernameLogin('')
       setPasswordLogin('')
       setErrorMessage('')
