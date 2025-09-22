@@ -3,32 +3,24 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { useAuth } from "@/context/authContext";
+import { sub } from "framer-motion/client";
+import registroService from "@/services/registros";
 
 export default function EditarRegistroPage() {
-  const { id } = useParams(); // captura el id dinámico
+  const { registro } = useParams(); // captura el id dinámico
   const [subestacion, setSubestacion] = useState("");
   const [materiales, setMateriales] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
+  const { registroActual } = useAuth();
+  console.log(registro)
 
-//   useEffect(() => {
-//     const fetchRegistro = async () => {
-//       try {
-//         const res = await fetch(`http://localhost:3000/api/registros/${id}`, {
-//           cache: "no-store",
-//         });
-//         const data = await res.json();
-//         setSubestacion(data.subestacion);
-//         setMateriales(data.materiales);
-//       } catch (error) {
-//         console.error("Error cargando registro:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     if (id) fetchRegistro();
-//   }, [id]);
+  useEffect(() => {
+  if (registroActual) {
+    setSubestacion(registroActual.subestacion || "");
+    setMateriales(registroActual.materiales || []);
+  }
+}, [registroActual]);
 
   const handleDeleteMaterial = (nombre) => {
     setMateriales((prev) => prev.filter((m) => m.nombre !== nombre));
@@ -41,32 +33,21 @@ export default function EditarRegistroPage() {
   };
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // setMensaje("⏳ Guardando cambios...");
+    e.preventDefault();
+    setMensaje("⏳ Guardando cambios...");
 
-    // try {
-    //   const res = await fetch(`http://localhost:3000/api/registros/${id}`, {
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization:
-    //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q4YjQxMWMyYzYyMjcyYmFjYWU1NiIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc1ODMwMTA5OCwiZXhwIjoxNzU4OTA1ODk4fQ.s62fvV0ywm6wwHGZIMOnHlOfiN0tB0gwKsvlGjurNUY",
-    //     },
-    //     body: JSON.stringify({
-    //       subestacion,
-    //       materiales,
-    //     }),
-    //   });
-
-    //   if (!res.ok) throw new Error("Error al actualizar registro");
-
-    //   setMensaje("✅ Cambios guardados con éxito");
-    // } catch (error) {
-    //   setMensaje("❌ " + error.message);
-    // }
+    try {
+      const res = await registroService.update(registro,  {
+          subestacion: subestacion,
+          materiales: materiales,
+        })    
+      setMensaje("✅ Cambios guardados con éxito");  
+    } catch (error) {
+      setMensaje("❌ Registro no corresponde a usuario");
+      console.log(error.message)
+    }
   };
 
-  if (loading) return <p className="py-30 text-center mt-10">Cargando registro...</p>;
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-800 px-6 py-30">
@@ -99,22 +80,22 @@ export default function EditarRegistroPage() {
         <div>
           <label className="block mb-2 font-medium">Materiales</label>
           <div className="space-y-3">
-            {materiales.map((mat, idx) => (
+            {materiales?.length > 0 && materiales.map((mat, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: idx * 0.1 }}
-                className="flex items-center justify-between p-4 border rounded-lg bg-gray-50"
+                className="flex items-center p-4 border rounded-lg bg-gray-50 space-x-3"
               >
-                <span className="font-medium">{mat.nombre}</span>
+                <span className="flex-1 font-medium truncate">{mat.nombre}</span>
                 <input
                   type="number"
                   value={mat.cantidad}
                   onChange={(e) =>
                     handleCantidadChange(mat.nombre, parseInt(e.target.value))
                   }
-                  className="w-20 px-2 py-1 border rounded-lg text-center"
+                  className="w-20 px-2 py-1 border rounded-lg text-center shrink-0"
                   min="0"
                 />
                 <motion.button
@@ -122,7 +103,7 @@ export default function EditarRegistroPage() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleDeleteMaterial(mat.nombre)}
-                  className="px-3 py-1 bg-red-500 text-white rounded-lg shadow hover:bg-red-600"
+                  className="px-3 py-1 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 shrink-0"
                 >
                   Eliminar
                 </motion.button>

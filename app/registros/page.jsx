@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
+import registroService from "@/services/registros";
 
 // Función debounce para animar uno por uno
 const staggeredAnimation = (i) => ({
@@ -16,21 +19,19 @@ const staggeredAnimation = (i) => ({
 export default function RegistrosPage() {
   const [registros, setRegistros] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { setRegistroActual } = useAuth();
 
   useEffect(() => {
-    const fetchRegistros = async () => {
+      setLoading(true)
       try {
-        const res = await fetch("http://localhost:3000/api/registros");
-        const data = await res.json();
-        setRegistros(data);
+        registroService.getAll()
+          .then((res)=>setRegistros(res))
       } catch (error) {
         console.error("Error al cargar registros:", error);
       } finally {
         setLoading(false);
-      }
-    };
-
-    fetchRegistros();
+      };
   }, []);
 
   return (
@@ -93,6 +94,8 @@ export default function RegistrosPage() {
                   className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"
                   onClick={() => {
                     // ejemplo: abrir modal o navegar
+                    setRegistroActual(registro)
+                    router.push(`/registros/${registro.id}`)
                     console.log("Ver registro", registro.id);
                   }}
                 >

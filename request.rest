@@ -26,7 +26,7 @@ Content-Type: application/json
 ### POST registro
 POST http://localhost:3000/api/registros
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q1YzFlNWExYzZmMmQwZTk5NGY3MiIsInVzZXJuYW1lIjoibWFpYyIsImlhdCI6MTc1ODI5OTk2MiwiZXhwIjoxNzU4OTA0NzYyfQ.FvNxnQj4jHF3fdQcjuDMDsC1KRjLXen3RCcyBC-1JD0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q4YjQxMWMyYzYyMjcyYmFjYWU1NiIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc1ODUxODc5NywiZXhwIjoxNzU5MTIzNTk3fQ.pKFr5KKYjMUUDjR-n1lN1glceSfYFmJUhpYW23mEA4c
 
 {
     "subestacion": "SE Zorritos",
@@ -37,6 +37,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q1YzFlN
         },
         {
             "nombre": "TDR9000",
+            "cantidad": 2
+        },
+        {
+            "nombre": "taladro",
+            "cantidad": 2
+        },
+        {
+            "nombre": "pertiga",
             "cantidad": 2
         }
     ]

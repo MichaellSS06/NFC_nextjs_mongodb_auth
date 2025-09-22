@@ -7,6 +7,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [redirectTo, setRedirectTo] = useState(null);
+  const [registroActual, setRegistroActual] = useState({subestacion:"",materiales:[]})
   const router = useRouter();
 
   // Simula leer token de localStorage al cargar
@@ -21,8 +22,21 @@ export function AuthProvider({ children }) {
     router.push("/");
   };
 
+    // Cargar desde localStorage al iniciar
+  useEffect(() => {
+    const saved = localStorage.getItem("registroActual");
+    if (saved) setRegistroActual(JSON.parse(saved));
+  }, []);
+
+  // Guardar cada vez que cambie
+  useEffect(() => {
+    if (registroActual) {
+      localStorage.setItem("registroActual", JSON.stringify(registroActual));
+    }
+  }, [registroActual]);
+
   return (
-    <AuthContext.Provider value={{ user, setRedirectTo, redirectTo, logout, setUser }}>
+    <AuthContext.Provider value={{ user, setRedirectTo, redirectTo, logout, setUser, registroActual, setRegistroActual }}>
       {children}
     </AuthContext.Provider>
   );

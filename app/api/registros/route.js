@@ -45,8 +45,9 @@ export async function POST(req, res) {
       await user.save()
 
       return Response.json(savedRegistro)
+
     } catch (error) {
-      return Response.send("Error guardando registro", error)
+      return Response.json({error: "Error guardando registro", error},{ status: 500})
     }
   } catch (error) {
     return Response.json({ error: error.message }, { status: 401 });
