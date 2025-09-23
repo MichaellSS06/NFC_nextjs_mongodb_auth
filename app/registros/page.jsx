@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import registroService from "@/services/registros";
+import debounce from 'just-debounce-it';
 
 // Función debounce para animar uno por uno
 const staggeredAnimation = (i) => ({
@@ -22,6 +23,9 @@ export default function RegistrosPage() {
   const router = useRouter();
   const { setRegistroActual } = useAuth();
 
+  const [filtroSubestacion, setFiltroSubestacion] = useState("");
+  const [filtroMaterial, setFiltroMaterial] = useState("");
+
   useEffect(() => {
       setLoading(true)
       try {
@@ -34,11 +38,63 @@ export default function RegistrosPage() {
       };
   }, []);
 
+  // const avisosFinal = useMemo(() => {
+  //   if (!avisosFiltrados) return [];
+  //   if (inputValue.trim() === '') return avisosFiltrados;
+
+  //   return avisosFiltrados.filter((aviso) =>
+  //     aviso.instalacion?.toLowerCase().includes(inputValue.toLowerCase())
+  //   );
+  // }, [avisosFiltrados, inputValue]);
+
+
+  // const debouncedSetInput = useCallback(
+  //     debounce((text) => {
+  //       setInputValue(text);
+  //     }, 1000),
+  //     []
+  //   );
+
+  // const handleChangeText = (newText) => {
+  //     if (newText.startsWith(' ')) return;
+  //     debouncedSetInput(newText);
+  //   }
+
   return (
     <div className="relative min-h-screen bg-gray-100 text-gray-800 px-6 py-30">
       <h1 className="text-3xl font-bold text-center mb-8">
         Registros de Subestaciones ⚡
       </h1>
+
+      <div className="max-w-2xl p-4 border-2 border-dashed border-gray-400 rounded-xl bg-white flex flex-col space-y-3 items-center">
+        <label className="block mb-2 font-medium">Buscar por: </label>
+        <div className="flex flex-row items-center space-x-2 space-y-0">
+            <div className="flex flex-col space-y-2">
+              <label className="block mb-2 font-medium">Subestación</label>
+              <input
+                type="text"
+                value={filtroSubestacion}
+                onChange={(e) => setFiltroSubestacion(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                placeholder="Ej: SE Zorritos"
+                required
+              />
+            </div>
+            
+            <div className="flex flex-col space-y-2">
+              <label className="block mb-2 font-medium">Equipo/material</label>
+              <input
+                type="text"
+                value={filtroMaterial}
+                onChange={(e) => setFiltroMaterial(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                placeholder="Ej: CPC100"
+                required
+              />
+            </div>
+        </div>
+      </div>
+      
 
       {loading ? (
         <p className="text-center text-gray-500">Cargando registros...</p>
