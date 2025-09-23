@@ -13,7 +13,7 @@ export default function EditarRegistroPage() {
   const [subestacion, setSubestacion] = useState("");
   const [materiales, setMateriales] = useState([]);
   const [mensaje, setMensaje] = useState("");
-  const { registroActual } = useAuth();
+  const { registroActual, registros } = useAuth();
   const router = useRouter();
   console.log(registro)
 

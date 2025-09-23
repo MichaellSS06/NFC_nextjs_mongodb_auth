@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function NavBar() {
     const [open, setOpen] = useState(false);
@@ -27,8 +28,20 @@ export default function NavBar() {
         <nav className="fixed w-full top-0 left-0 z-50 bg-black/40 backdrop-blur-md shadow-md">
         <div className="w-full mx-auto px-6 py-4 flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="text-2xl font-bold tracking-wide text-white">
-                🚀 MiLogo
+            <Link href="/" className="flex items-center space-x-3">
+               <div className="inset-0 max-h-fit">
+                    <Image
+                    src="/logo_sinfondo.webp" // 👈 ruta desde /public
+                    alt="Fondo ISA"
+                    width={70}   // tamaño fijo
+                    height={70}
+                    priority
+                    className="object-contain m-0 p-0"
+                    />
+                </div>
+                <span className="text-xl font-bold tracking-wide text-white inset-0">
+                    Registros de Equipos y Materiales
+                </span>
             </Link>
          
             {/* Links Desktop */}
@@ -37,7 +50,7 @@ export default function NavBar() {
             <Link onClick={(event) => handleClick("/crear_registro", event)} href="/crear_registro" className="hover:text-blue-400 transition">Crear Registro</Link>
             {user ? 
                 <>
-                <p>Hola {user.name}</p>
+                <p>Hola,<span className="font-bold"> {user.name} </span> </p>
                 <Link onClick={logout} href="/" className="hover:text-blue-400 transition">Log Out</Link>
                 </>
                 :
@@ -64,11 +77,9 @@ export default function NavBar() {
             animate={{ y: 0, opacity: 1 }}
             className="md:hidden bg-black/90 px-6 py-4 flex flex-col gap-4"
             >
-                <Link onClick={(event) => {handleClick("/registros", event); setOpen(!open)}} href="/registros" className="hover:text-blue-400 transition">Registros</Link>
-                <Link onClick={(event) => {handleClick("/crear_registro", event); setOpen(!open)}} href="/crear_registro" className="hover:text-blue-400 transition">Crear Registro</Link>
                 {user ? 
                     <>
-                    <p>Hola {user.name}</p>
+                    <p>Hola,<span className="font-bold"> {user.name} </span> </p>
                     <Link onClick={()=>{logout; setOpen(!open)}} href="/" className="hover:text-blue-400 transition">Log Out</Link>
                     </>
                     :
@@ -77,6 +88,8 @@ export default function NavBar() {
                     <Link onClick={()=>setOpen(!open)}href="/login" className="hover:text-blue-400 transition">Log In</Link>
                     </>
                 }
+                <Link onClick={(event) => {handleClick("/registros", event); setOpen(!open)}} href="/registros" className="hover:text-blue-400 transition">Registros</Link>
+                <Link onClick={(event) => {handleClick("/crear_registro", event); setOpen(!open)}} href="/crear_registro" className="hover:text-blue-400 transition">Crear Registro</Link>
             </motion.div>
         )}
         </nav>

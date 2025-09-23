@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+  const [registros, setRegistros] = useState([]);
   const [user, setUser] = useState(null);
   const [redirectTo, setRedirectTo] = useState(null);
   const [registroActual, setRegistroActual] = useState({subestacion:"",materiales:[]})
@@ -41,7 +42,17 @@ export function AuthProvider({ children }) {
   }, [registroActual]);
 
   return (
-    <AuthContext.Provider value={{ user, setRedirectTo, redirectTo, logout, setUser, login, registroActual, setRegistroActual }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      setRedirectTo, 
+      redirectTo, 
+      logout, 
+      setUser, 
+      login, 
+      registroActual, 
+      setRegistroActual,
+      registros, 
+      setRegistros }}>
       {children}
     </AuthContext.Provider>
   );

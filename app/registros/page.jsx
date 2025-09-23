@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
@@ -13,12 +13,12 @@ const staggeredAnimation = (i) => ({
   visible: {
     opacity: 1,
     y: 0,
-    transition: { delay: i * 1, duration: 0.6 }, // 👈 1s por tarjeta
+    transition: { delay: i * 0.5, duration: 0.6 }, // 👈 1s por tarjeta
   },
 });
 
 export default function RegistrosPage() {
-  const [registros, setRegistros] = useState([]);
+  const {registros, setRegistros} = useAuth();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { setRegistroActual } = useAuth();
@@ -27,54 +27,82 @@ export default function RegistrosPage() {
   const [filtroMaterial, setFiltroMaterial] = useState("");
 
   useEffect(() => {
-      setLoading(true)
+    const fetchRegistros = async () => {
+      setLoading(true);
       try {
-        registroService.getAll()
-          .then((res)=>setRegistros(res))
+        const res = await registroService.getAll();
+        setRegistros(res);
       } catch (error) {
         console.error("Error al cargar registros:", error);
       } finally {
         setLoading(false);
-      };
+      }
+    };
+
+    fetchRegistros();
   }, []);
 
-  // const avisosFinal = useMemo(() => {
-  //   if (!avisosFiltrados) return [];
-  //   if (inputValue.trim() === '') return avisosFiltrados;
+  const registrosFinal = useMemo(() => {
+    if (!registros) return [];
 
-  //   return avisosFiltrados.filter((aviso) =>
-  //     aviso.instalacion?.toLowerCase().includes(inputValue.toLowerCase())
-  //   );
-  // }, [avisosFiltrados, inputValue]);
+    return registros.filter((registro) => {
+      const matchSub = filtroSubestacion.trim()
+        ? registro.subestacion?.toLowerCase().includes(filtroSubestacion.toLowerCase())
+        : true;
 
+      const matchMat = filtroMaterial.trim()
+        ? registro.materiales?.some((mat) =>
+            mat.nombre.toLowerCase().includes(filtroMaterial.toLowerCase())
+          )
+        : true;
 
-  // const debouncedSetInput = useCallback(
-  //     debounce((text) => {
-  //       setInputValue(text);
-  //     }, 1000),
-  //     []
-  //   );
+      return matchSub && matchMat;
+    });
+  }, [registros, filtroMaterial, filtroSubestacion]);
 
-  // const handleChangeText = (newText) => {
-  //     if (newText.startsWith(' ')) return;
-  //     debouncedSetInput(newText);
-  //   }
+  const debouncedSetInput = useCallback(
+      debounce((text, setEstado) => {
+        setEstado(text);
+      }, 1000),
+      []
+    );
 
+  // useEffect(() => {
+  // return () => {
+  //   debouncedSetInput.cancel();
+  //   };
+  // }, [debouncedSetInput]);
+
+  const handleFilter = (newText, setEstado) => {
+      if (newText.startsWith(' ')) return;
+      debouncedSetInput(newText, setEstado);
+    }
+  
   return (
     <div className="relative min-h-screen bg-gray-100 text-gray-800 px-6 py-30">
-      <h1 className="text-3xl font-bold text-center mb-8">
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }} 
+        className="text-3xl font-bold text-center mb-5">
         Registros de Subestaciones ⚡
-      </h1>
+      </motion.h1>
 
-      <div className="max-w-2xl p-4 border-2 border-dashed border-gray-400 rounded-xl bg-white flex flex-col space-y-3 items-center">
-        <label className="block mb-2 font-medium">Buscar por: </label>
-        <div className="flex flex-row items-center space-x-2 space-y-0">
-            <div className="flex flex-col space-y-2">
-              <label className="block mb-2 font-medium">Subestación</label>
+      <div className="flex justify-center bg-gray-100 pb-5 min-h-min">
+      <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-2xl p-4 border-2 border-dashed border-gray-400 rounded-xl bg-white flex flex-col space-y-3 items-center">
+        <h2 className="mb-2 font-bold text-xl">Filtrar{'  '}<span> {'   '} </span></h2>
+        <div className="flex flex-row space-x-2 space-y-0">
+            <div className="flex flex-col space-y-1">
+              <div className="flex justify-center items-center mb-0">
+                <label className="block mb-2 font-medium">Subestación</label>
+              </div>
               <input
                 type="text"
-                value={filtroSubestacion}
-                onChange={(e) => setFiltroSubestacion(e.target.value)}
+                onChange={(event)=>handleFilter(event.target.value, setFiltroSubestacion)}
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                 placeholder="Ej: SE Zorritos"
                 required
@@ -85,22 +113,21 @@ export default function RegistrosPage() {
               <label className="block mb-2 font-medium">Equipo/material</label>
               <input
                 type="text"
-                value={filtroMaterial}
-                onChange={(e) => setFiltroMaterial(e.target.value)}
+                onChange={(event) => handleFilter(event.target.value, setFiltroMaterial)}
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                 placeholder="Ej: CPC100"
                 required
               />
             </div>
         </div>
+      </motion.div>
       </div>
-      
 
       {loading ? (
         <p className="text-center text-gray-500">Cargando registros...</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {registros.map((registro, i) => (
+          {registrosFinal.map((registro, i) => (
             <motion.div
               key={registro.id}
               initial="hidden"
@@ -145,8 +172,10 @@ export default function RegistrosPage() {
 
               {/* CTA / acciones pequeñas */}
               <div className="mt-6 flex items-center justify-between gap-4">
-                <button
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"
                   onClick={() => {
                     // ejemplo: abrir modal o navegar
@@ -156,7 +185,7 @@ export default function RegistrosPage() {
                   }}
                 >
                   Ver
-                </button>
+                </motion.button>
 
                 <div className="text-sm text-gray-500">ID: {registro.id.slice(0, 8)}…</div>
               </div>

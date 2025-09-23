@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import registroService from "@/services/registros";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
+import { compareMaterials } from "@/utils/compareMaterials";
 
 export default function CrearRegistroPage() {
   const [subestacion, setSubestacion] = useState("");
@@ -13,6 +15,7 @@ export default function CrearRegistroPage() {
   const [loading, setLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const router = useRouter();
+  const {registros} = useAuth();
 
   // Simulación de NFC scan: agrega un material "random"
   const handleScanNFC = async () => {
@@ -87,6 +90,10 @@ export default function CrearRegistroPage() {
       setMensaje("✅ Registro creado con éxito");
       setSubestacion("");
       setMateriales([]);
+
+      const comparaciones = compareMaterials(registros, materiales, subestacion)
+      console.log(comparaciones)
+
       setTimeout(() => {
         router.push("/registros")
       }, 1000)
@@ -226,6 +233,7 @@ export default function CrearRegistroPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
           className="p-4 border-2 border-dashed border-gray-400 rounded-xl bg-white flex flex-col space-y-3"
         >
           <span className="font-medium text-gray-600">Agregar material manual</span>

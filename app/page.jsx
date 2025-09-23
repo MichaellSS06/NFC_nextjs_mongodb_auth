@@ -39,18 +39,18 @@ export default function Home() {
           className="relative z-10 px-6"
         >
           <h1 className="text-4xl md:text-6xl font-extrabold mb-4">
-            Bienvenido a <span className="text-blue-400">Mi Landing</span>
+            Bienvenido a <span className="text-blue-400">Registros de Equipos y Materiales</span>
           </h1>
-          <p className="text-lg md:text-xl max-w-2xl mx-auto mb-6">
-            Una landing page moderna con Next.js, TailwindCSS y animaciones fluidas.
+          <p className="text-lg md:text-xl max-w-4xl mx-auto mb-6">
+            Una plataforma para registrar nuestros equipos por subestación, dar con su ubicación facilmente y verificar alertas relacionas a sus cantidades todo implementado con tecnología NFC.
           </p>
           <motion.a
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            href="#features"
+            href="/registros"
             className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition font-semibold shadow-lg"
           >
-            Comenzar
+            Ver registros
           </motion.a>
         </motion.div>
       </section>
