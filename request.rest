@@ -26,7 +26,7 @@ Content-Type: application/json
 ### POST registro
 POST http://localhost:3000/api/registros
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q4YjQxMWMyYzYyMjcyYmFjYWU1NiIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc1ODUxODc5NywiZXhwIjoxNzU5MTIzNTk3fQ.pKFr5KKYjMUUDjR-n1lN1glceSfYFmJUhpYW23mEA4c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDQyNjk1OWRjMjg5NTg0ZWYxYjFlNyIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc1ODczMzk4NywiZXhwIjoxNzU5MzM4Nzg3fQ.JJ1Y9pFXjewtQg2qjrjFJtCseYTGklDET_V779d9zHg
 
 {
     "subestacion": "SE Zorritos",
@@ -53,18 +53,46 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q4YjQxM
 ### PUT registro (falta)
 PUT http://localhost:3000/api/registros/68cd727a99371c0f249ad604
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q4YjQxMWMyYzYyMjcyYmFjYWU1NiIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc1ODMwMTA5OCwiZXhwIjoxNzU4OTA1ODk4fQ.s62fvV0ywm6wwHGZIMOnHlOfiN0tB0gwKsvlGjurNUY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDQyNjk1OWRjMjg5NTg0ZWYxYjFlNyIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc1ODczMzk4NywiZXhwIjoxNzU5MzM4Nzg3fQ.JJ1Y9pFXjewtQg2qjrjFJtCseYTGklDET_V779d9zHg
 
 {
     "subestacion": "SE Zorritos",
     "materiales": [
         {
-            "nombre": "LCM500",
+            "nombre": "CPC100",
             "cantidad": 4
         },
         {
-            "nombre": "DILO",
+            "nombre": "TDR9000",
             "cantidad": 5
         }
     ]
+}
+
+### GET ALERTAS
+GET https://nonethically-agrobiological-nerissa.ngrok-free.dev/api/alertas
+
+### POST ALERTAS
+POST https://nonethically-agrobiological-nerissa.ngrok-free.dev/api/alertas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q4YjQxMWMyYzYyMjcyYmFjYWU1NiIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc1ODUxODc5NywiZXhwIjoxNzU5MTIzNTk3fQ.pKFr5KKYjMUUDjR-n1lN1glceSfYFmJUhpYW23mEA4c
+
+{
+    "cantidadActual" : 2,
+    "cantidadRegistro": 1,
+    "fecha":"2025-09-24T05:18:19.989Z",
+    "mensaje":"Aumentó en 1",
+    "nombre":"TDR9000",
+    "status":"increased",
+    "subestacion": "Chiclayo"
+}
+
+### PUT ALERTAS
+PUT https://nonethically-agrobiological-nerissa.ngrok-free.dev/api/alertas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Y2Q4YjQxMWMyYzYyMjcyYmFjYWU1NiIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc1ODUxODc5NywiZXhwIjoxNzU5MTIzNTk3fQ.pKFr5KKYjMUUDjR-n1lN1glceSfYFmJUhpYW23mEA4c
+
+{
+    "id" : "68d427049dc289584ef1b1f0",
+    "comentario": "se traslado a chiclayo"
 }

@@ -5,8 +5,7 @@ const baseUrl = 'https://nonethically-agrobiological-nerissa.ngrok-free.dev/api/
 const login = async credentials => {
   const res = await axios.post(baseUrl, credentials)
   if (res.status!==200) {
-    const errorData = await res.json().catch(() => ({}))
-    throw new Error(errorData.error  || "Login failed")
+    throw new Error(res.data?.error  || "Login failed")
   }
   return res.data
 }

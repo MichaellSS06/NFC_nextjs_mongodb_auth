@@ -8,7 +8,7 @@ export async function GET() {
     const registros = await Registro.find({}).populate('user', {
     username: 1,
     name: 1
-  })
+  }).sort({ date: -1 }).limit(1000);
   return Response.json(registros)
 }
 

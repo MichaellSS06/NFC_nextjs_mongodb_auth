@@ -144,7 +144,7 @@ export default function CrearRegistroPage() {
             value={subestacion}
             onChange={(e) => setSubestacion(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-            placeholder="Ej: SE Zorritos"
+            placeholder="Ej: Zorritos"
             required
           />
         </div>

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
     await connectDB();
-    const alertas = await Alertas.find({})
+    const alertas = await Alertas.find({}).sort({ fecha: -1 }).limit(1000); 
   return Response.json(alertas)
 }
 

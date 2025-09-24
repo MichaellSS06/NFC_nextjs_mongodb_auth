@@ -115,24 +115,64 @@ export default function EditarRegistroPage() {
                 className="flex items-center p-4 border rounded-lg bg-gray-50 space-x-3"
               >
                 <span className="flex-1 font-medium truncate">{mat.nombre}</span>
-                <input
-                  type="number"
-                  value={mat.cantidad}
-                  onChange={(e) =>
-                    handleCantidadChange(mat.nombre, parseInt(e.target.value))
-                  }
-                  className="w-20 px-2 py-1 border rounded-lg text-center shrink-0"
-                  min="0"
-                />
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleDeleteMaterial(mat.nombre)}
-                  className="px-3 py-1 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 shrink-0"
-                >
-                  Eliminar
-                </motion.button>
+
+                <div className="flex items-center space-x-2">
+
+                {/* Botón + */}
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() =>
+                        setMateriales((prev) =>
+                          prev.map((m) =>
+                            m.nombre === mat.nombre
+                              ? { ...m, cantidad: m.cantidad + 1 }
+                              : m
+                          )
+                        )
+                      }
+                      className="px-2 py-1 bg-green-500 text-white rounded-lg shadow hover:bg-green-600"
+                    >
+                      +
+                    </motion.button>
+
+                    {/* Cantidad */}
+                    <span className="px-3 py-1 bg-indigo-200 rounded-lg font-semibold min-w-[40px] text-center">
+                      {mat.cantidad}
+                    </span>
+
+                    {/* Botón - */}
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() =>
+                        setMateriales((prev) =>
+                          prev
+                            .map((m) =>
+                              m.nombre === mat.nombre
+                                ? { ...m, cantidad: m.cantidad - 1 }
+                                : m
+                            )
+                            .filter((m) => m.cantidad > 0) // elimina si llega a 0
+                        )
+                      }
+                      className="px-2 py-1 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600"
+                    >
+                      –
+                    </motion.button>
+
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleDeleteMaterial(mat.nombre)}
+                    className="px-3 py-1 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 shrink-0"
+                  >
+                    ✕
+                  </motion.button>
+                </div>
               </motion.div>
             ))}
           </div>

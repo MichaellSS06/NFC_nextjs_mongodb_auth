@@ -18,8 +18,7 @@ const create = async (newAlerta) => {
   const request = await axios.post(baseUrl, newAlerta, config)
 
   if (request.status!==200) {
-    const errorData = await res.json().catch(() => ({}))
-    throw new Error(errorData.error  || "No hay credenciales")
+    throw new Error(request.data?.error  || "No hay credenciales")
   }
 
   return request.data
@@ -31,12 +30,10 @@ const update = async (newComment) => {
       Authorization: getToken()
     }
   }
-  console.log(id)
   const request = await axios.put(baseUrl, newComment, config)
   
   if (request.status!==200) {
-    const errorData = await res.json().catch(() => ({}))
-    throw new Error(errorData.error  || "No hay credenciales")
+    throw new Error(request.data?.error  || "No hay credenciales")
   }
 
   return request.data

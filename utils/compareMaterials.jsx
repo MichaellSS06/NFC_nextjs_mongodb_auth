@@ -24,7 +24,8 @@ export function compareMaterials(registros, materiales, subestacion) {
 
           for (const mat of registro.materiales || []) {
             const keyReg = normalize(mat.nombre);
-            if (keyReg.includes(keyEstado) || keyEstado.includes(keyReg)) {
+            if (keyReg === keyEstado) {
+            // (keyReg.includes(keyEstado) || keyEstado.includes(keyReg)) {
               posibles.push({
                 registro,
                 material: mat,

@@ -41,14 +41,15 @@ export default function Home() {
           <h1 className="text-4xl md:text-6xl font-extrabold mb-4">
             Bienvenido a <span className="text-blue-400">Registros de Equipos y Materiales</span>
           </h1>
-          <p className="text-lg md:text-xl max-w-4xl mx-auto mb-6">
+          <p className="text-lg md:text-xl max-w-4xl mx-auto mb-6 hover:scale-110 transition">
             Una plataforma para registrar nuestros equipos por subestación, dar con su ubicación facilmente y verificar alertas relacionas a sus cantidades todo implementado con tecnología NFC.
           </p>
           <motion.a
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 300, damping: 15 }}
             href="/registros"
-            className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition font-semibold shadow-lg"
+            className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors duration-300 font-semibold shadow-lg text-white inline-block"
           >
             Ver registros
           </motion.a>
