@@ -1,38 +1,14 @@
 "use client";
 
 import alertaService from "@/services/alertas";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { staggeredAnimation } from "../registros/page";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-
-export function useAlertas() {
-  const [alertas, setAlertas] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchAlertas = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await alertaService.getAll();
-      setAlertas(res);
-    } catch (error) {
-      console.error("Error al cargar alertas:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchAlertas();
-  }, [fetchAlertas]);
-
-  return { alertas, loading, fetchAlertas };
-}
+import { useAlertas } from "@/utils/useAlertas";
 
 export default function AlertasPage() {
   const { alertas, loading, fetchAlertas } = useAlertas();
   const [comentarios, setComentarios] = useState({});
-  const router = useRouter();
 
   useEffect(() => {  
     fetchAlertas();
