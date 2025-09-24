@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getToken } from './registros'
 
-const baseUrl = 'https://nonethically-agrobiological-nerissa.ngrok-free.dev/api/alertas'
+const baseUrl = '/api/alertas'
 
 const getAll = async () => {
   const request = await axios.get(baseUrl)

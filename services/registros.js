@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = 'https://nonethically-agrobiological-nerissa.ngrok-free.dev/api/registros'
+const baseUrl = '/api/registros'
 
 // let token = null
 
