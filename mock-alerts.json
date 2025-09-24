@@ -1,0 +1,19 @@
+[
+    {
+        "cantidadActual" : 2,
+        "cantidadRegistro":1,
+        "fecha":"2025-09-24T05:18:19.989Z",
+        "mensaje":"Aumentó en 1",
+        "nombre":"TDR9000",
+        "status":"decreased"
+    },
+    {
+        "cantidadActual" : 2,
+        "cantidadRegistro":1,
+        "fecha":"2025-09-24T05:18:19.989Z",
+        "mensaje":"Aumentó en 1",
+        "nombre":"LCM500",
+        "status":"decreased"
+    }
+]
+

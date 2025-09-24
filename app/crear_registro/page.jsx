@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import registroService from "@/services/registros";
+import alertaService from "@/services/alertas";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import { compareMaterials } from "@/utils/compareMaterials";
@@ -87,12 +88,27 @@ export default function CrearRegistroPage() {
         subestacion: subestacion,
         materiales: materiales
       })
-      setMensaje("✅ Registro creado con éxito");
+      setMensaje("⏳ Verificando alertas...");
       setSubestacion("");
       setMateriales([]);
 
       const comparaciones = compareMaterials(registros, materiales, subestacion)
       console.log(comparaciones)
+      comparaciones && comparaciones.length>0 && await Promise.all(
+        comparaciones.map((alerta) =>
+          alertaService.create({
+            cantidadActual: alerta.cantidadActual,
+            cantidadRegistro: alerta.cantidadRegistro,
+            fecha: alerta.fecha,
+            mensaje: alerta.mensaje,
+            nombre: alerta.nombre,
+            status: alerta.status,
+            subestacion: alerta.subestacion
+          })
+        )
+      );
+
+      setMensaje("✅ Registro creado con éxito");
 
       setTimeout(() => {
         router.push("/registros")

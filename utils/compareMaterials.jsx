@@ -49,20 +49,22 @@ export function compareMaterials(registros, materiales, subestacion) {
         if (diferencia > 0) {
           return {
             nombre: matEstado.nombre,
-            status: "increased",
+            status: "decreased",
             mensaje: `Disminuyó en ${diferencia}`,
             cantidadRegistro,
             cantidadActual,
             fecha: latest.registro.date,
+            subestacion: subestacion
           };
         } else if (diferencia < 0) {
           return {
             nombre: matEstado.nombre,
-            status: "decreased",
+            status: "increased",
             mensaje: `Aumentó en ${Math.abs(diferencia)}`,
             cantidadRegistro,
             cantidadActual,
             fecha: latest.registro.date,
+            subestacion: subestacion
           };
         } 
         // else {

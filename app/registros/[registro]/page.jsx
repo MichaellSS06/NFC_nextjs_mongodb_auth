@@ -6,7 +6,9 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/context/authContext";
 import { sub } from "framer-motion/client";
 import registroService from "@/services/registros";
+import alertaService from "@/services/alertas";
 import { useRouter } from "next/navigation";
+import { compareMaterials } from "@/utils/compareMaterials";
 
 export default function EditarRegistroPage() {
   const { registro } = useParams(); // captura el id dinámico
@@ -43,6 +45,24 @@ export default function EditarRegistroPage() {
           subestacion: subestacion,
           materiales: materiales,
         })    
+      setMensaje("⏳ Verificando alertas...");
+
+      const comparaciones = compareMaterials(registros, materiales, subestacion)
+      console.log(comparaciones)
+      comparaciones && comparaciones.length>0 && await Promise.all(
+        comparaciones.map((alerta) =>
+          alertaService.create({
+            cantidadActual: alerta.cantidadActual,
+            cantidadRegistro: alerta.cantidadRegistro,
+            fecha: alerta.fecha,
+            mensaje: alerta.mensaje,
+            nombre: alerta.nombre,
+            status: alerta.status,
+            subestacion: alerta.subestacion
+          })
+        )
+      );
+      
       setMensaje("✅ Cambios guardados con éxito");
       setTimeout(() => {
         router.push("/registros")

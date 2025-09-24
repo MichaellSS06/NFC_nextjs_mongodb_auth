@@ -8,7 +8,7 @@ import registroService from "@/services/registros";
 import debounce from 'just-debounce-it';
 
 // Función debounce para animar uno por uno
-const staggeredAnimation = (i) => ({
+export const staggeredAnimation = (i) => ({
   hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
