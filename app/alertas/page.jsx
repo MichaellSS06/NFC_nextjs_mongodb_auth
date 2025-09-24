@@ -2,7 +2,7 @@
 
 import alertaService from "@/services/alertas";
 import { useState, useEffect } from "react";
-import { staggeredAnimation } from "../registros/page";
+import { staggeredAnimation } from "@/utils/animationCard";
 import { motion } from "framer-motion";
 import { useAlertas } from "@/utils/useAlertas";
 

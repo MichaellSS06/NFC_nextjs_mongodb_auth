@@ -6,16 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import registroService from "@/services/registros";
 import debounce from 'just-debounce-it';
-
-// Función debounce para animar uno por uno
-export const staggeredAnimation = (i) => ({
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.5, duration: 0.6 }, // 👈 1s por tarjeta
-  },
-});
+import { staggeredAnimation } from "@/utils/animationCard";
 
 export default function RegistrosPage() {
   const {registros, setRegistros} = useAuth();
