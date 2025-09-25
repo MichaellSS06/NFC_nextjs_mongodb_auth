@@ -46,22 +46,22 @@ export default function NavBar() {
          
             {/* Links Desktop */}
             <div className="hidden md:flex gap-8">
-            <Link onClick={(event) => handleClick("/registros", event)} href="/registros" className="hover:text-blue-400 hover:scale-125 transition">Registros</Link>
-            <Link onClick={(event) => handleClick("/crear_registro", event)} href="/crear_registro" className="hover:text-blue-400 hover:scale-125 transition">Crear Registro</Link>
-            <Link onClick={(event) => handleClick("/alertas", event)} href="/alertas" className="hover:text-blue-400 hover:scale-125 transition">Alertas</Link>
+            <Link onClick={(event) => handleClick("/registros", event)} href="/registros" className="hover:text-blue-400 hover:scale-125 transition text-white">Registros</Link>
+            <Link onClick={(event) => handleClick("/crear_registro", event)} href="/crear_registro" className="hover:text-blue-400 hover:scale-125 transition text-white">Crear Registro</Link>
+            <Link onClick={(event) => handleClick("/alertas", event)} href="/alertas" className="hover:text-blue-400 hover:scale-125 transition text-white">Alertas</Link>
             {user ? 
                 <>
-                <p>Hola,<span className="font-bold"> {user.name} </span> </p>
+                <p className="text-white">Hola,<span className="font-bold text-white"> {user.name} </span> </p>
                 <Link onClick={(e) => {
                         e.preventDefault(); // evita que navegue antes de limpiar
                         logout();           // ejecuta logout
                        }} 
-                    href="/" className="hover:text-blue-400 hover:scale-125 transition">Log Out</Link>
+                    href="/" className="hover:text-blue-400 hover:scale-125 transition text-white">Log Out</Link>
                 </>
                 :
                 <>
-                <Link href="/signup" className="hover:text-blue-400 transition">Sign Up</Link>
-                <Link href="/login" className="hover:text-blue-400 transition">Log In</Link>
+                <Link href="/signup" className="hover:text-blue-400 hover:scale-125 transition text-white">Sign Up</Link>
+                <Link href="/login" className="hover:text-blue-400 hover:scale-125 transition text-white">Log In</Link>
                 </>
                 }
             </div>

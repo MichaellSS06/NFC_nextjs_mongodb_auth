@@ -61,36 +61,36 @@ export default function SignupPage() {
 
         <form className="space-y-5" onSubmit={handleSignUp}>
           <div>
-            <label className="block mb-1 text-sm font-medium">Nombre</label>
+            <label className="block mb-1 text-sm font-medium text-white">Nombre</label>
             <input
               value={name}
               onChange={({target})=>setName(target.value)}
               type="text"
               placeholder="Tu name completo"
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="text-white w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
           <div>
-            <label className="block mb-1 text-sm font-medium">Usuario</label>
+            <label className="text-white block mb-1 text-sm font-medium">Usuario</label>
             <input
               value={usernameSignup}
               onChange={({target})=>setUsernameSignup(target.value)}
               type="text"
               placeholder="Nombre de usuario"
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="text-white w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
           <div>
-            <label className="block mb-1 text-sm font-medium">Contraseña</label>
+            <label className="text-white block mb-1 text-sm font-medium">Contraseña</label>
             <div className="relative">
               <input
                 value={passwordSignup}
                 onChange={({target})=>setPasswordSignup(target.value)}
                 type={showPasswordSignup ? "text" : "password"}
                 placeholder="********"
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none pr-10"
+                className="text-white w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none pr-10"
               />
               <button
                 type="button"

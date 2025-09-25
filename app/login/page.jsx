@@ -63,25 +63,25 @@ export default function LoginPage() {
 
         <form className="space-y-5" onSubmit={handleLogin}>
           <div>
-            <label className="block mb-1 text-sm font-medium">Usuario</label>
+            <label className="text-white block mb-1 text-sm font-medium">Usuario</label>
             <input
               value={usernameLogin}
               onChange={({target})=>setUsernameLogin(target.value)}
               type="text"
               placeholder="Tu usuario"
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="text-white w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
           <div>
-            <label className="block mb-1 text-sm font-medium">Contraseña</label>
+            <label className="text-white block mb-1 text-sm font-medium">Contraseña</label>
             <div className="relative">
               <input
                 value={passwordLogin}
                 onChange={({target})=>setPasswordLogin(target.value)}
                 type={showPasswordLogin ? "text" : "password"}
                 placeholder="********"
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none pr-10"
+                className="text-white w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none pr-10"
               />
               <button
                 type="button"
